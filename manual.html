@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Help - Abschlussarbeiten-Verwaltung</title>
+  <style>
+    :root {
+      --blue:#060d8d;
+      --green:#43b02a;
+      --bg:#eef2f8;
+      --paper:#ffffff;
+      --text:#1f2937;
+      --muted:#687386;
+      --line:#d8dee9;
+      --soft:#f6f8fc;
+      --warn:#fff7df;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:#f4f6fa;
+      color:var(--text);
+      line-height:1.55;
+      height:100vh;
+      overflow:hidden;
+    }
+    .app-shell {
+      display:grid;
+      grid-template-columns:300px 1fr;
+      height:100vh;
+      width:100vw;
+    }
+    aside {
+      background:#fff;
+      border-right:1px solid var(--line);
+      padding:24px 16px;
+      overflow:auto;
+      box-shadow:2px 0 14px rgba(15,23,42,.04);
+      z-index:10;
+    }
+    .brand {
+      padding:4px 8px 18px;
+      border-bottom:1px solid var(--line);
+      margin-bottom:16px;
+    }
+    .eyebrow {
+      color:var(--green);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.74rem;
+      font-weight:800;
+      margin:0 0 7px;
+    }
+    h1 {
+      color:var(--blue);
+      font-size:1.55rem;
+      line-height:1.08;
+      margin:0;
+      letter-spacing:-.03em;
+    }
+    .nav-list {
+      display:grid;
+      gap:6px;
+    }
+    .nav-item {
+      width:100%;
+      display:grid;
+      grid-template-columns:34px 1fr;
+      gap:8px;
+      align-items:center;
+      border:1px solid transparent;
+      background:transparent;
+      color:var(--text);
+      border-radius:12px;
+      padding:9px 8px;
+      text-align:left;
+      cursor:pointer;
+      font:inherit;
+      font-size:.92rem;
+      transition:.15s ease;
+    }
+    .nav-item span {
+      color:var(--green);
+      font-weight:800;
+      font-size:.85rem;
+    }
+    .nav-item:hover {
+      background:var(--soft);
+      border-color:var(--line);
+    }
+    .nav-item.active {
+      background:#eef8eb;
+      border-color:#cbe9c3;
+      color:var(--blue);
+      font-weight:700;
+    }
+    main {
+      overflow:auto;
+      padding:34px;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+    }
+    .manual-page {
+      display:none;
+      position:relative;
+      width:min(980px, 100%);
+      min-height:calc(100vh - 68px);
+      background:var(--paper);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:56px 64px;
+      box-shadow:0 8px 24px rgba(15,23,42,.055);
+      overflow:hidden;
+    }
+    .manual-page.active {
+      display:block;
+      animation:fadeIn .18s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity:0; transform:translateY(4px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+    .manual-page::before {
+      content:"";
+      position:absolute;
+      inset:0 0 auto 0;
+      height:9px;
+      background:var(--blue);
+    }
+    .page-number {
+      position:absolute;
+      top:28px;
+      right:34px;
+      color:#c4cbd8;
+      font-size:3rem;
+      font-weight:800;
+      line-height:1;
+    }
+    .page-header {
+      margin-bottom:34px;
+      padding-right:90px;
+    }
+    .page-header h2 {
+      color:var(--blue);
+      font-size:2.35rem;
+      line-height:1.08;
+      margin:0 0 10px;
+      letter-spacing:-.03em;
+    }
+    .subtitle {
+      color:var(--muted);
+      font-size:1.08rem;
+      margin:0;
+    }
+    .page-content {
+      font-size:1.03rem;
+    }
+    .page-content p {
+      margin:0 0 16px;
+    }
+    ul, ol {
+      padding-left:1.25rem;
+      margin:0 0 20px;
+    }
+    li { margin:.38rem 0; }
+    code {
+      background:var(--soft);
+      border:1px solid var(--line);
+      border-radius:7px;
+      padding:.1rem .35rem;
+      color:var(--blue);
+    }
+    table {
+      width:100%;
+      border-collapse:collapse;
+      margin:18px 0 22px;
+      overflow:hidden;
+      border-radius:14px;
+      border:1px solid var(--line);
+      font-size:.96rem;
+    }
+    th {
+      background:var(--blue);
+      color:#fff;
+      text-align:left;
+      padding:11px 13px;
+    }
+    td {
+      border-top:1px solid var(--line);
+      padding:10px 13px;
+      vertical-align:top;
+    }
+    tr:nth-child(even) td { background:#fafbfe; }
+    .info-box, .warning-box {
+      border-radius:18px;
+      padding:16px 18px;
+      margin:20px 0;
+      border:1px solid var(--line);
+    }
+    .info-box {
+      background:#eef8eb;
+      border-color:#cbe9c3;
+    }
+    .warning-box {
+      background:var(--warn);
+      border-color:#f1d28a;
+    }
+    .pager {
+      position:fixed;
+      right:28px;
+      bottom:24px;
+      display:flex;
+      gap:8px;
+      z-index:20;
+    }
+    .pager button {
+      border:none;
+      background:var(--blue);
+      color:#fff;
+      border-radius:999px;
+      padding:10px 15px;
+      cursor:pointer;
+      font-weight:700;
+      box-shadow:0 6px 18px rgba(6,13,141,.16);
+    }
+    .pager button:disabled {
+      opacity:.35;
+      cursor:default;
+    }
+    @media(max-width:850px) {
+      body { overflow:auto; height:auto; }
+      .app-shell {
+        grid-template-columns:1fr;
+        height:auto;
+      }
+      aside {
+        position:sticky;
+        top:0;
+        max-height:42vh;
+      }
+      main {
+        padding:18px;
+      }
+      .manual-page {
+        min-height:auto;
+        border-radius:18px;
+        padding:42px 26px;
+      }
+      .page-header { padding-right:58px; }
+      .page-header h2 { font-size:1.85rem; }
+      .page-number { font-size:2.2rem; top:22px; right:24px; }
+    }
+    @media print {
+      body { overflow:visible; height:auto; background:#fff; }
+      .app-shell { display:block; height:auto; }
+      aside, .pager { display:none; }
+      main { display:block; padding:0; overflow:visible; }
+      .manual-page {
+        display:block !important;
+        width:100%;
+        min-height:100vh;
+        border:none;
+        border-radius:0;
+        box-shadow:none;
+        margin:0;
+        padding:42px 52px;
+        page-break-after:always;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside>
+      <div class="brand">
+        <p class="eyebrow">Benutzerhandbuch</p>
+        <h1>Abschlussarbeiten-Verwaltung</h1>
+      </div>
+      <nav class="nav-list" aria-label="Inhalt">
+        <button class="nav-item active" data-page="0"><span>01</span>Start und Überblick</button>
+<button class="nav-item " data-page="1"><span>02</span>Projektdateien öffnen</button>
+<button class="nav-item " data-page="2"><span>03</span>Übersicht</button>
+<button class="nav-item " data-page="3"><span>04</span>Einträge filtern</button>
+<button class="nav-item " data-page="4"><span>05</span>Spalten auswählen</button>
+<button class="nav-item " data-page="5"><span>06</span>Neue Arbeit anlegen</button>
+<button class="nav-item " data-page="6"><span>07</span>Reiter Allgemeines</button>
+<button class="nav-item " data-page="7"><span>08</span>Termine anlegen</button>
+<button class="nav-item " data-page="8"><span>09</span>Termin-Reiter</button>
+<button class="nav-item " data-page="9"><span>10</span>Markdown in Notizen</button>
+<button class="nav-item " data-page="10"><span>11</span>Aufgaben und Aktionen</button>
+<button class="nav-item " data-page="11"><span>12</span>Risikologik</button>
+<button class="nav-item " data-page="12"><span>13</span>Gantt-Diagramm</button>
+<button class="nav-item " data-page="13"><span>14</span>ICS-Export</button>
+<button class="nav-item " data-page="14"><span>15</span>JSON Import und Export</button>
+<button class="nav-item " data-page="15"><span>16</span>CSV Export</button>
+<button class="nav-item " data-page="16"><span>17</span>Lokale Speicherung</button>
+<button class="nav-item " data-page="17"><span>18</span>Git und Projektpflege</button>
+      </nav>
+    </aside>
+
+    <main>
+      
+    <article class="manual-page active" data-page="0">
+      <div class="page-number">01</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>Start und Überblick</h2>
+        <p class="subtitle">Wofür das Tool gedacht ist</p>
+      </header>
+      <section class="page-content">
+        <p>Das Abschlussarbeiten-Tool dient zur lokalen Verwaltung betreuter Arbeiten. Es unterstützt Bachelorarbeiten, Masterarbeiten, praktische Studienphasen, IPs und sonstige betreute Projekte.</p>
+        <p>Die Anwendung läuft vollständig im Browser. Die Daten werden lokal gespeichert und können zusätzlich als JSON-Datei exportiert werden.</p>
+        <div class="info-box"><strong>Typische Nutzung:</strong> Übersicht pflegen, Termine anlegen, Aufgaben verfolgen, Risiken erkennen und den Betreuungsstand im Gantt-Diagramm visualisieren.</div>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="1">
+      <div class="page-number">02</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>Projektdateien öffnen</h2>
+        <p class="subtitle">So startest du das Programm</p>
+      </header>
+      <section class="page-content">
+        <p>Öffne die Datei <code>index.html</code> im Browser. Empfohlen wird Firefox oder ein aktueller Chromium-basierter Browser.</p>
+        <ol><li>Projektordner entpacken.</li><li><code>index.html</code> doppelklicken.</li><li>Das Tool startet mit der Übersicht.</li></ol>
+        <p>Die Dateien <code>styles.css</code> und <code>app.js</code> müssen im gleichen Ordner wie <code>index.html</code> liegen.</p>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="2">
+      <div class="page-number">03</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>Übersicht</h2>
+        <p class="subtitle">Alle Arbeiten in einer Tabelle</p>
+      </header>
+      <section class="page-content">
+        <p>Die Übersicht zeigt alle gefilterten Arbeiten tabellarisch an. Abgeschlossene Arbeiten werden hellgrau dargestellt.</p>
+        <p>Ein Klick auf eine Tabellenzeile öffnet den Bearbeitungsdialog.</p>
+        <ul><li><strong>Name:</strong> Student*in oder Kandidat*in</li><li><strong>Art:</strong> z. B. Bachelorarbeit, Masterarbeit oder IP</li><li><strong>Status:</strong> aktueller Bearbeitungsstand</li><li><strong>Risiko:</strong> grün, gelb oder rot</li><li><strong>Nächste Aktion:</strong> automatisch aus offenen Terminaufgaben übernommen</li></ul>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="3">
+      <div class="page-number">04</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>Einträge filtern</h2>
+        <p class="subtitle">Schnell die relevanten Arbeiten finden</p>
+      </header>
+      <section class="page-content">
+        <p>Oberhalb der Übersicht stehen mehrere Filter zur Verfügung. Die Filter wirken kombiniert.</p>
+        <table><tr><th>Filter</th><th>Funktion</th></tr><tr><td>Suche</td><td>Durchsucht Namen, Themen, Unternehmen, Betreuer*innen und Bemerkungen.</td></tr><tr><td>Anzeige</td><td>Zeigt aktive, abgeschlossene, kritische oder bald fällige Arbeiten.</td></tr><tr><td>Status</td><td>Filtert nach Bearbeitungsstatus.</td></tr><tr><td>Risiko</td><td>Filtert nach grün, gelb oder rot.</td></tr><tr><td>Art</td><td>Filtert nach Art der Arbeit.</td></tr></table>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="4">
+      <div class="page-number">05</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>Spalten auswählen</h2>
+        <p class="subtitle">Übersicht individuell anpassen</p>
+      </header>
+      <section class="page-content">
+        <p>Über den Button <strong>Auswahl Einträge</strong> können Spalten ein- und ausgeblendet werden.</p>
+        <p>Die Auswahl wird lokal gespeichert und beim nächsten Start wiederhergestellt.</p>
+        <ol><li>Button <strong>Auswahl Einträge</strong> öffnen.</li><li>Gewünschte Spalten aktivieren oder deaktivieren.</li><li>Mit <strong>Übernehmen</strong> speichern.</li></ol>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="5">
+      <div class="page-number">06</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>Neue Arbeit anlegen</h2>
+        <p class="subtitle">Eintrag erstellen</p>
+      </header>
+      <section class="page-content">
+        <p>Mit <strong>+ Neue Arbeit</strong> wird eine neue Arbeit angelegt. Im Reiter <strong>Allgemeines</strong> werden Stammdaten und Bearbeitungsstand gepflegt.</p>
+        <ul><li>Name</li><li>Art der Arbeit</li><li>Studiengang</li><li>Thema</li><li>Betreuer*in 1 und 2</li><li>Start- und Abgabedatum</li><li>Status und Risiko</li></ul>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="6">
+      <div class="page-number">07</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>Reiter Allgemeines</h2>
+        <p class="subtitle">Stammdaten und Status</p>
+      </header>
+      <section class="page-content">
+        <p>Der Reiter <strong>Allgemeines</strong> enthält alle bearbeitbaren Grunddaten einer Arbeit.</p>
+        <p>Die Buttons <strong>Duplizieren</strong> und <strong>Löschen</strong> werden nur in diesem Reiter angezeigt.</p>
+        <div class="warning-box">Beim Löschen muss zur Sicherheit der Name des Eintrags exakt eingegeben werden.</div>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="7">
+      <div class="page-number">08</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>Termine anlegen</h2>
+        <p class="subtitle">Betreuungstermine verwalten</p>
+      </header>
+      <section class="page-content">
+        <p>Termine werden über <strong>+ Termin</strong> im Bearbeitungsdialog oder durch Klick in eine Kalenderwoche im Gantt-Diagramm erzeugt.</p>
+        <p>Termine werden automatisch nach Datum und Uhrzeit sortiert und durchgehend nummeriert.</p>
+        <p>Beispiel: Wird ein neuer Termin zeitlich vor Termin 2 eingefügt, passt das Tool die Nummerierung automatisch an.</p>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="8">
+      <div class="page-number">09</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>Termin-Reiter</h2>
+        <p class="subtitle">Notizen und Aufgaben</p>
+      </header>
+      <section class="page-content">
+        <p>Jeder Termin besitzt einen eigenen Reiter. Dort können Datum, Uhrzeit, Notiz und Aufgaben gepflegt werden.</p>
+        <p>Der Termin-Reiter enthält drei getrennte Bereiche:</p>
+        <ul><li><strong>Notiz</strong></li><li><strong>Aufgaben Betreuer*In</strong></li><li><strong>Aufgaben Student*In</strong></li></ul>
+        <p>Die beiden Aufgabenbereiche besitzen zusätzlich jeweils eine Checkbox <strong>Aufgabe erledigt</strong>.</p>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="9">
+      <div class="page-number">10</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>Markdown in Notizen</h2>
+        <p class="subtitle">Formatierte Inhalte erfassen</p>
+      </header>
+      <section class="page-content">
+        <p>In Notizen und Aufgaben können einfache Markdown-Elemente genutzt werden.</p>
+        <table><tr><th>Funktion</th><th>Markdown</th></tr><tr><td>Überschrift</td><td><code>## Überschrift</code></td></tr><tr><td>Fett</td><td><code>**Text**</code></td></tr><tr><td>Kursiv</td><td><code>*Text*</code></td></tr><tr><td>Liste</td><td><code>- Eintrag</code></td></tr><tr><td>Aufgabe</td><td><code>- [ ] Aufgabe</code></td></tr></table>
+        <p>Der Button <strong>Markdown</strong> schaltet zwischen Syntaxansicht und interpretierter Darstellung um.</p>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="10">
+      <div class="page-number">11</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>Aufgaben und Aktionen</h2>
+        <p class="subtitle">Automatische Übernahme in die Übersicht</p>
+      </header>
+      <section class="page-content">
+        <p>Die Aufgaben aus dem nächsten offenen Termin werden automatisch in die Übersicht übernommen.</p>
+        <ul><li><strong>Aufgaben Student*In</strong> erscheinen in der Spalte <strong>Nächste Aktion Student*In</strong>.</li><li><strong>Aufgaben Betreuer*In</strong> erscheinen in der Spalte <strong>Nächste Aktion Betreuer*In</strong>.</li></ul>
+        <p>In der Übersicht werden Aktionen einzeilig angezeigt. Nach längerem Mouseover erscheint der vollständige Text.</p>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="11">
+      <div class="page-number">12</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>Risikologik</h2>
+        <p class="subtitle">Automatische Eskalation</p>
+      </header>
+      <section class="page-content">
+        <p>Das Risiko kann manuell gesetzt werden. Die automatische Logik überschreibt manuelle Einstufungen nicht nach unten, sondern eskaliert nur.</p>
+        <table><tr><th>Bedingung</th><th>Automatisches Risiko</th></tr><tr><td>Weniger als 10 Tage bis Termin und offene Aufgaben</td><td>gelb</td></tr><tr><td>Weniger als 3 Tage bis Termin und offene Aufgaben</td><td>rot</td></tr><tr><td>Beide Aufgaben erledigt</td><td>Nachfrage, ob Risiko auf grün gesetzt werden soll</td></tr></table>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="12">
+      <div class="page-number">13</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>Gantt-Diagramm</h2>
+        <p class="subtitle">Zeitliche Planung visualisieren</p>
+      </header>
+      <section class="page-content">
+        <p>Das Gantt-Diagramm zeigt die Laufzeit der Arbeiten als Balken und Termine als orange Marker.</p>
+        <ul><li>Klick auf eine Arbeit öffnet den Eintrag.</li><li>Klick auf einen Terminmarker öffnet den Termin.</li><li>Klick auf eine leere Kalenderwoche erzeugt einen neuen Termin.</li><li>Mehrere Termine pro Woche werden als mehrere Marker angezeigt.</li></ul>
+        <p>Nach 1 Sekunde Mouseover über einem Terminmarker erscheinen Termininformationen.</p>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="13">
+      <div class="page-number">14</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>ICS-Export</h2>
+        <p class="subtitle">Termine in Kalender übernehmen</p>
+      </header>
+      <section class="page-content">
+        <p>Jeder Termin kann als ICS-Datei exportiert werden. Die Datei kann anschließend in Kalenderprogramme importiert werden.</p>
+        <p>Exportiert werden:</p>
+        <ul><li>Titel</li><li>Datum</li><li>Uhrzeit</li><li>Notiz</li><li>Aufgaben Betreuer*In</li><li>Aufgaben Student*In</li></ul>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="14">
+      <div class="page-number">15</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>JSON Import und Export</h2>
+        <p class="subtitle">Datensicherung</p>
+      </header>
+      <section class="page-content">
+        <p>Im Reiter <strong>Daten</strong> kann über den JSON Export der vollständige Datenbestand gesichert werden.</p>
+        <p>Beim JSON-Import werden vorhandene Einträge nicht gelöscht. Importierte Einträge werden ergänzt. Falls IDs bereits existieren, erzeugt das Tool neue IDs.</p>
+        <div class="info-box">Empfehlung: Regelmäßig eine JSON-Sicherung erstellen.</div>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="15">
+      <div class="page-number">16</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>CSV Export</h2>
+        <p class="subtitle">Daten weiterverarbeiten</p>
+      </header>
+      <section class="page-content">
+        <p>Der CSV Export erzeugt eine tabellarische Datei für Excel oder andere Tabellenprogramme.</p>
+        <p>Der CSV Export ist besonders nützlich für Berichte, Archivierung oder zusätzliche Auswertungen.</p>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="16">
+      <div class="page-number">17</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>Lokale Speicherung</h2>
+        <p class="subtitle">Daten im Browser</p>
+      </header>
+      <section class="page-content">
+        <p>Die Daten werden lokal im Browser gespeichert. Zusätzlich kann jederzeit manuell gespeichert werden.</p>
+        <ul><li>Automatisches Speichern nach Änderungen</li><li>Regelmäßige Speicherprüfung</li><li>Speichern beim Schließen</li><li>Manuelles Speichern über den Button</li></ul>
+        <p>Die Speicherung erfolgt im lokalen Browserprofil.</p>
+    </section>
+    </article>
+    
+
+    <article class="manual-page " data-page="17">
+      <div class="page-number">18</div>
+      <header class="page-header">
+        <p class="eyebrow">Abschlussarbeiten-Verwaltung</p>
+        <h2>Git und Projektpflege</h2>
+        <p class="subtitle">Versionierung</p>
+      </header>
+      <section class="page-content">
+        <p>Das Projekt steht öffentlich unter folgender Adresse zur Verfügung:</p>
+        <p><code>https://github.com/lukaslentz/Abschlussarbeiten-Verwaltung.git</code></p>
+</section>
+    </article>
+    
+    </main>
+  </div>
+
+  <div class="pager">
+    <button id="prevBtn" type="button">← Zurück</button>
+    <button id="nextBtn" type="button">Weiter →</button>
+  </div>
+
+  <script>
+    const navItems = Array.from(document.querySelectorAll('.nav-item'));
+    const pages = Array.from(document.querySelectorAll('.manual-page'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let current = 0;
+
+    function showPage(index) {
+      current = Math.max(0, Math.min(index, pages.length - 1));
+      navItems.forEach((item, i) => item.classList.toggle('active', i === current));
+      pages.forEach((page, i) => page.classList.toggle('active', i === current));
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === pages.length - 1;
+      navItems[current].scrollIntoView({ block: 'nearest' });
+      document.querySelector('main').scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    navItems.forEach((item, i) => item.addEventListener('click', () => showPage(i)));
+    prevBtn.addEventListener('click', () => showPage(current - 1));
+    nextBtn.addEventListener('click', () => showPage(current + 1));
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') showPage(current + 1);
+      if (event.key === 'ArrowLeft') showPage(current - 1);
+    });
+
+    showPage(0);
+  </script>
+</body>
+</html>

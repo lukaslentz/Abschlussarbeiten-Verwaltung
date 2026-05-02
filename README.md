@@ -168,3 +168,51 @@ Es gibt keine Option „Abbrechen“ mehr.
 - Im Gantt können mehrere Termine in derselben Kalenderwoche angezeigt werden.
 - Jeder Terminmarker ist einzeln anklickbar und öffnet den passenden Termin.
 - Das Erstellen neuer Termine durch Klick in eine Kalenderwoche bleibt erhalten.
+
+## Version v34
+
+- Das HTML-Handbuch ist als `manual.html` direkt im Projekt enthalten.
+- Im Tool gibt es einen Button `Help`, der das Handbuch öffnet.
+- Das Layout des Tools wurde optisch an das Handbuch angepasst.
+- Im Handbuch wurde der Abschnitt „Git und Projektpflege“ auf den öffentlichen Repository-Link reduziert:
+  https://github.com/lukaslentz/Abschlussarbeiten-Verwaltung.git
+
+## Version v35
+
+Das Layout wurde dezenter gestaltet:
+
+- ruhigere Hintergrundfläche
+- reduzierte Schatten
+- weniger starke Gradienten
+- zurückhaltendere Karten und Dialoge
+- moderne, aber schlichtere Button- und Tab-Darstellung
+
+## Version v36
+
+Die Datumsberechnung beim Erzeugen neuer Termine aus dem Gantt wurde korrigiert. Der Wochenstart wird nun als lokales Datum erzeugt und nicht mehr über `toISOString()`. Dadurch werden Verschiebungen durch Zeitzonen vermieden.
+
+## Version v37
+
+Die Datenfunktionen wurden aus der Kopfzeile entfernt und in einen eigenen Reiter „Daten“ verschoben:
+
+- JSON Export
+- CSV Export
+- JSON Import
+
+Der frühere Import-Button heißt nun „JSON Import“. Beim JSON Import werden vorhandene Einträge weiterhin nicht gelöscht.
+
+## Version v38
+
+Der Hinweis im Reiter „Daten“ wurde angepasst:
+
+„Der Datenbestand wird immer lokal im Browser gespeichert und steht damit bei der Benutzung des selben Browsers immer wieder zur Verfügung. Sollen Datenbestände umgezogen werden, kann ein Export als *.json erfolgen.“
+
+## Version v39
+
+- Hinweis im Reiter „Daten“ sprachlich korrigiert: „Der Datenbestand ...“
+- Die initialen Beispieldaten umfassen nun vier Einträge.
+- Einer der Beispieldatensätze ist abgeschlossen.
+
+## Version v40
+
+Der Button „Help“ wurde in „Hilfe“ umbenannt.

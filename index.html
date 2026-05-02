@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Abschlussarbeiten v33</title>
+  <title>Abschlussarbeiten v40</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -13,17 +13,14 @@
       <h1 id="mainTitle">Abschlussarbeiten</h1>
       <div class="title-info" id="titleInfo">
         <strong>Abschlussarbeiten</strong><br>
-        Version: v33<br>
+        Version: v40<br>
         Erstellt am: 2026-05-01<br>
         Autor: <a href="mailto:L.Lentz@umwelt-campus.de?subject=Abschlussarbeiten-Tool">Lukas Lentz</a>
       </div>
     </div>
     <div class="button-row">
       <button class="primary" id="addBtn" type="button">+ Neue Arbeit</button>
-      <button id="exportJsonBtn" type="button">JSON exportieren</button>
-      <button id="exportCsvBtn" type="button">CSV exportieren</button>
-      <label class="button-like" for="importFile">Import</label>
-      <input id="importFile" type="file" accept=".json,.csv" style="display:none" />
+      <button id="helpBtn" type="button">Hilfe</button>
       <button id="storageStatus" class="storage-status" type="button">lokal speichern</button>
     </div>
   </div>
@@ -68,6 +65,7 @@
     <div class="tab-left">
       <button class="tab active" type="button" data-view="tableView">Übersicht</button>
       <button class="tab" type="button" data-view="ganttView">Gantt</button>
+      <button class="tab" type="button" data-view="dataView">Daten</button>
     </div>
     <button id="columnsBtn" type="button">Auswahl Einträge</button>
   </nav>
@@ -90,6 +88,22 @@
       </div>
     </section>
     <div class="gantt-wrap"><div class="gantt" id="gantt"></div></div>
+  </section>
+
+  <section class="view" id="dataView">
+    <section class="card data-card">
+      <h2>Daten</h2>
+      <p class="muted">Import und Export des lokalen Datenbestands.</p>
+      <div class="data-actions">
+        <button id="exportJsonBtn" type="button">JSON Export</button>
+        <button id="exportCsvBtn" type="button">CSV Export</button>
+        <label class="button-like" for="importFile">JSON Import</label>
+        <input id="importFile" type="file" accept=".json" style="display:none" />
+      </div>
+      <div class="info-box-lite">
+        <strong>Hinweis:</strong> Der Datenbestand wird immer lokal im Browser gespeichert und steht damit bei der Benutzung des selben Browsers immer wieder zur Verfügung. Sollen Datenbestände umgezogen werden, kann ein Export als *.json erfolgen.
+      </div>
+    </section>
   </section>
 </main>
 

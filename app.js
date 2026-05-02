@@ -1,5 +1,5 @@
 /*
- * Abschlussarbeiten-Tool v33
+ * Abschlussarbeiten-Tool v40
  * Objektorientierter Aufbau:
  * - ThesisStore: Datenhaltung, Import/Export, Autosave
  * - MarkdownService: einfache Markdown-Interpretation
@@ -25,44 +25,182 @@ class ThesisStore {
   }
 
   demoData() {
-    return [{
-      id: ThesisStore.makeId(),
-      name: "Max Mustermann",
-      type: "Bachelorarbeit",
-      program: "Maschinenbau",
-      topic: "System zur Erfassung von Betriebsdaten",
-      company: "intern",
-      supervisor1: "Lentz",
-      supervisor2: "",
-      startDate: "2026-04-15",
-      dueDate: "2026-08-15",
-      status: "Bearbeitung läuft",
-      risk: "gelb",
-      nextMeeting: "",
-      lastContact: "2026-04-24",
-      studentAction: "Gliederung überarbeiten",
-      supervisorAction: "Feedback zu Messkonzept",
-      expose: "ja",
-      outline: "in Arbeit",
-      intermediate: "nein",
-      colloquiumMode: "date",
-      colloquiumDate: "2026-08-28",
-      evaluation: "offen",
-      grade: "",
-      noteLink: "obsidian://open?vault=Abschlussarbeiten&file=2026_BA_Mustermann",
-      folderLink: "",
-      tags: "Messdaten, Versuch",
-      remarks: "Beispieldatensatz. Bitte überschreiben.",
-      appointments: [{
+    return [
+      {
         id: ThesisStore.makeId(),
-        title: "Termin 1",
-        date: "2026-05-08",
-        time: "09:00",
-        notes: "bislang keine Notiz",
-        markdownInterpreted: false
-      }]
-    }].map(t => this.normalizeEntry(t));
+        name: "Max Mustermann",
+        type: "Bachelorarbeit",
+        program: "Maschinenbau",
+        topic: "System zur Erfassung von Betriebsdaten",
+        company: "intern",
+        supervisor1: "Lentz",
+        supervisor2: "",
+        startDate: "2026-04-15",
+        dueDate: "2026-08-15",
+        status: "Bearbeitung läuft",
+        risk: "gelb",
+        nextMeeting: "",
+        lastContact: "2026-04-24",
+        studentAction: "",
+        supervisorAction: "",
+        expose: "ja",
+        outline: "in Arbeit",
+        intermediate: "nein",
+        colloquiumMode: "date",
+        colloquiumDate: "2026-08-28",
+        evaluation: "offen",
+        grade: "",
+        noteLink: "obsidian://open?vault=Abschlussarbeiten&file=2026_BA_Mustermann",
+        folderLink: "",
+        tags: "Messdaten, Versuch",
+        remarks: "Beispieldatensatz.",
+        appointments: [{
+          id: ThesisStore.makeId(),
+          title: "Termin 1",
+          date: "2026-05-08",
+          time: "09:00",
+          notes: "## Besprechung\nMesskonzept und Datenstruktur diskutieren.",
+          markdownInterpreted: false,
+          supervisorTask: "- Feedback zum Messkonzept vorbereiten",
+          studentTask: "- Gliederung überarbeiten\n- Datenformat skizzieren",
+          supervisorTaskMarkdownInterpreted: false,
+          studentTaskMarkdownInterpreted: false,
+          supervisorDone: false,
+          studentDone: false
+        }]
+      },
+      {
+        id: ThesisStore.makeId(),
+        name: "Anna Beispiel",
+        type: "Masterarbeit",
+        program: "Umweltorientierte Energietechnik",
+        topic: "CFD-gestützte Untersuchung eines Kühlkanals",
+        company: "Fritsch GmbH",
+        supervisor1: "Lentz",
+        supervisor2: "Dinges",
+        startDate: "2026-03-01",
+        dueDate: "2026-09-01",
+        status: "Angemeldet",
+        risk: "grün",
+        nextMeeting: "",
+        lastContact: "2026-04-20",
+        studentAction: "",
+        supervisorAction: "",
+        expose: "ja",
+        outline: "ja",
+        intermediate: "in Arbeit",
+        colloquiumMode: "none",
+        colloquiumDate: "",
+        evaluation: "offen",
+        grade: "",
+        noteLink: "",
+        folderLink: "",
+        tags: "CFD, Kühlung, Industrie",
+        remarks: "Industriekooperation mit Fokus auf Simulation.",
+        appointments: [{
+          id: ThesisStore.makeId(),
+          title: "Termin 1",
+          date: "2026-05-15",
+          time: "10:30",
+          notes: "Randbedingungen und Vernetzung prüfen.",
+          markdownInterpreted: false,
+          supervisorTask: "- Beispielrechnung prüfen",
+          studentTask: "- Netzunabhängigkeitsstudie vorbereiten",
+          supervisorTaskMarkdownInterpreted: false,
+          studentTaskMarkdownInterpreted: false,
+          supervisorDone: false,
+          studentDone: false
+        }]
+      },
+      {
+        id: ThesisStore.makeId(),
+        name: "Jonas Demo",
+        type: "Praktische Studienphase",
+        program: "Maschinenbau",
+        topic: "Aufbau eines Versuchsstands zur Strömungsmessung",
+        company: "Labor",
+        supervisor1: "Lentz",
+        supervisor2: "",
+        startDate: "2026-04-01",
+        dueDate: "2026-07-01",
+        status: "Kritische Phase",
+        risk: "rot",
+        nextMeeting: "",
+        lastContact: "2026-04-25",
+        studentAction: "",
+        supervisorAction: "",
+        expose: "in Arbeit",
+        outline: "nein",
+        intermediate: "nein",
+        colloquiumMode: "none",
+        colloquiumDate: "",
+        evaluation: "offen",
+        grade: "",
+        noteLink: "",
+        folderLink: "",
+        tags: "Versuch, Strömung, Messung",
+        remarks: "Zeitkritisch wegen fehlender Sensorauswahl.",
+        appointments: [{
+          id: ThesisStore.makeId(),
+          title: "Termin 1",
+          date: "2026-05-04",
+          time: "09:00",
+          notes: "Sensorentscheidung treffen.",
+          markdownInterpreted: false,
+          supervisorTask: "- Datenblatt prüfen",
+          studentTask: "- Vergleichsliste Sensoren erstellen",
+          supervisorTaskMarkdownInterpreted: false,
+          studentTaskMarkdownInterpreted: false,
+          supervisorDone: false,
+          studentDone: false
+        }]
+      },
+      {
+        id: ThesisStore.makeId(),
+        name: "Lisa Abgeschlossen",
+        type: "Bachelorarbeit",
+        program: "Maschinenbau",
+        topic: "Literaturstudie zur Betriebsfestigkeit additiv gefertigter Bauteile",
+        company: "intern",
+        supervisor1: "Lentz",
+        supervisor2: "",
+        startDate: "2025-10-01",
+        dueDate: "2026-02-01",
+        status: "Abgeschlossen",
+        risk: "grün",
+        nextMeeting: "",
+        lastContact: "2026-02-10",
+        studentAction: "",
+        supervisorAction: "",
+        expose: "ja",
+        outline: "ja",
+        intermediate: "ja",
+        colloquiumMode: "date",
+        colloquiumDate: "2026-02-12",
+        evaluation: "ja",
+        grade: "1,7",
+        noteLink: "",
+        folderLink: "",
+        tags: "Betriebsfestigkeit, Literatur",
+        remarks: "Abgeschlossen und bewertet.",
+        appointments: [{
+          id: ThesisStore.makeId(),
+          title: "Termin 1",
+          date: "2026-02-12",
+          time: "14:00",
+          notes: "Kolloquium durchgeführt.",
+          markdownInterpreted: false,
+          supervisorTask: "Bewertung abgeschlossen",
+          studentTask: "Abschlussdokumente eingereicht",
+          supervisorTaskMarkdownInterpreted: false,
+          studentTaskMarkdownInterpreted: false,
+          supervisorDone: true,
+          studentDone: true
+        }]
+      }
+    ].map(t => this.normalizeEntry(t));
   }
+
 
   loadData() {
     let raw = localStorage.getItem(this.storageKey);
@@ -319,8 +457,8 @@ class ThesisApp {
   constructor() {
     this.$ = id => document.getElementById(id);
     this.store = new ThesisStore(
-      "abschlussarbeiten_tool_v33",
-      ["abschlussarbeiten_tool_v32","abschlussarbeiten_tool_v31","abschlussarbeiten_tool_v30","abschlussarbeiten_tool_v29","abschlussarbeiten_tool_v28","abschlussarbeiten_tool_v27","abschlussarbeiten_tool_v26","abschlussarbeiten_tool_v25","abschlussarbeiten_tool_v24","abschlussarbeiten_tool_v23","abschlussarbeiten_tool_v22","abschlussarbeiten_tool_v21","abschlussarbeiten_tool_v20","abschlussarbeiten_tool_v19","abschlussarbeiten_tool_v18","abschlussarbeiten_tool_v17","abschlussarbeiten_tool_v16","abschlussarbeiten_tool_v15","abschlussarbeiten_tool_v14","abschlussarbeiten_tool_v13","abschlussarbeiten_tool_v12","abschlussarbeiten_tool_v11","abschlussarbeiten_tool_v10","abschlussarbeiten_tool_v9","abschlussarbeiten_tool_v8","abschlussarbeiten_tool_v7","abschlussarbeiten_tool_v6","abschlussarbeiten_tool_v5","abschlussarbeiten_tool_v4","abschlussarbeiten_tool_v3","abschlussarbeiten_tool_v2","abschlussarbeiten_tool_v1"],
+      "abschlussarbeiten_tool_v40",
+      ["abschlussarbeiten_tool_v39","abschlussarbeiten_tool_v38","abschlussarbeiten_tool_v37","abschlussarbeiten_tool_v36","abschlussarbeiten_tool_v35","abschlussarbeiten_tool_v34","abschlussarbeiten_tool_v33","abschlussarbeiten_tool_v32","abschlussarbeiten_tool_v31","abschlussarbeiten_tool_v30","abschlussarbeiten_tool_v29","abschlussarbeiten_tool_v28","abschlussarbeiten_tool_v27","abschlussarbeiten_tool_v26","abschlussarbeiten_tool_v25","abschlussarbeiten_tool_v24","abschlussarbeiten_tool_v23","abschlussarbeiten_tool_v22","abschlussarbeiten_tool_v21","abschlussarbeiten_tool_v20","abschlussarbeiten_tool_v19","abschlussarbeiten_tool_v18","abschlussarbeiten_tool_v17","abschlussarbeiten_tool_v16","abschlussarbeiten_tool_v15","abschlussarbeiten_tool_v14","abschlussarbeiten_tool_v13","abschlussarbeiten_tool_v12","abschlussarbeiten_tool_v11","abschlussarbeiten_tool_v10","abschlussarbeiten_tool_v9","abschlussarbeiten_tool_v8","abschlussarbeiten_tool_v7","abschlussarbeiten_tool_v6","abschlussarbeiten_tool_v5","abschlussarbeiten_tool_v4","abschlussarbeiten_tool_v3","abschlussarbeiten_tool_v2","abschlussarbeiten_tool_v1"],
       "abschlussarbeiten_visible_columns_v1"
     );
     this.currentAppointmentId = null;
@@ -340,7 +478,12 @@ class ThesisApp {
 
   isClosed(t) { return t.status === "Abgeschlossen"; }
   formatDate(dateStr) { return dateStr ? new Date(dateStr + "T00:00:00").toLocaleDateString("de-DE") : ""; }
-  dateValue(d) { return d.toISOString().slice(0, 10); }
+  dateValue(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
   daysUntil(dateStr) {
     if (!dateStr) return "";
     const today = new Date(); today.setHours(0,0,0,0);
@@ -603,7 +746,7 @@ class ThesisApp {
 
         const cell = this.ganttCell("", cls);
         cell.dataset.thesisId = t.id;
-        cell.dataset.weekStart = wStart.toISOString().slice(0, 10);
+        cell.dataset.weekStart = this.dateValue(wStart);
         cell.title = weekAppointments.length ? "" : name + "\n" + this.formatDate(t.startDate) + " – " + this.formatDate(t.dueDate);
 
         weekAppointments.forEach((appt, idx) => {
@@ -928,7 +1071,8 @@ class ThesisApp {
   addAppointment(thesisId, date) {
     const thesis = this.store.theses.find(t => t.id === thesisId);
     if (!thesis) return;
-    const appt = { id: ThesisStore.makeId(), title: "Termin", date: date || new Date().toISOString().slice(0,10), time:"09:00", notes:"bislang keine Notiz", markdownInterpreted:false, supervisorTask:"bislang keine Aufgabe", studentTask:"bislang keine Aufgabe", supervisorTaskMarkdownInterpreted:false, studentTaskMarkdownInterpreted:false, supervisorDone:false, studentDone:false };
+    const today = this.dateValue(new Date());
+    const appt = { id: ThesisStore.makeId(), title: "Termin", date: date || today, time:"09:00", notes:"bislang keine Notiz", markdownInterpreted:false, supervisorTask:"bislang keine Aufgabe", studentTask:"bislang keine Aufgabe", supervisorTaskMarkdownInterpreted:false, studentTaskMarkdownInterpreted:false, supervisorDone:false, studentDone:false };
     thesis.appointments.push(appt);
     this.store.sortAndNumberAppointments(thesis);
     this.scheduleAutosave();
@@ -1096,7 +1240,7 @@ class ThesisApp {
 
   async exportJson() {
     const content = JSON.stringify(this.store.theses, null, 2);
-    const suggested = "abschlussarbeiten_" + new Date().toISOString().slice(0,10) + ".json";
+    const suggested = "abschlussarbeiten_" + this.dateValue(new Date()) + ".json";
     if (window.showSaveFilePicker) {
       try {
         const handle = await window.showSaveFilePicker({
@@ -1119,7 +1263,7 @@ class ThesisApp {
     const csv = [headers.join(";")]
       .concat(this.store.theses.map(t => headers.map(h => '"' + String(t[h] || "").replace(/"/g, '""') + '"').join(";")))
       .join("\n");
-    ThesisApp.downloadFile("abschlussarbeiten_" + new Date().toISOString().slice(0,10) + ".csv", csv, "text/csv;charset=utf-8");
+    ThesisApp.downloadFile("abschlussarbeiten_" + this.dateValue(new Date()) + ".csv", csv, "text/csv;charset=utf-8");
   }
 
   importFile(file) {
@@ -1228,6 +1372,7 @@ class ThesisApp {
 
     this.$("exportJsonBtn").addEventListener("click", () => this.exportJson());
     this.$("exportCsvBtn").addEventListener("click", () => this.exportCsv());
+    this.$("helpBtn").addEventListener("click", () => window.open("manual.html", "_blank"));
     this.$("importFile").addEventListener("change", e => {
       if (e.target.files?.[0]) this.importFile(e.target.files[0]);
       e.target.value = "";
