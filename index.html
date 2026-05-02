@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Abschlussarbeiten v33</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header>
+  <div class="title-row">
+    <div class="title-wrap" id="titleWrap">
+      <h1 id="mainTitle">Abschlussarbeiten</h1>
+      <div class="title-info" id="titleInfo">
+        <strong>Abschlussarbeiten</strong><br>
+        Version: v33<br>
+        Erstellt am: 2026-05-01<br>
+        Autor: <a href="mailto:L.Lentz@umwelt-campus.de?subject=Abschlussarbeiten-Tool">Lukas Lentz</a>
+      </div>
+    </div>
+    <div class="button-row">
+      <button class="primary" id="addBtn" type="button">+ Neue Arbeit</button>
+      <button id="exportJsonBtn" type="button">JSON exportieren</button>
+      <button id="exportCsvBtn" type="button">CSV exportieren</button>
+      <label class="button-like" for="importFile">Import</label>
+      <input id="importFile" type="file" accept=".json,.csv" style="display:none" />
+      <button id="storageStatus" class="storage-status" type="button">lokal speichern</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="grid" id="dashboard"></section>
+
+  <section class="card">
+    <div class="toolbar">
+      <div>
+        <label for="searchInput">Suche</label>
+        <input id="searchInput" type="search" placeholder="Name, Thema, Unternehmen, Betreuer, Bemerkung ..." />
+      </div>
+      <div>
+        <label for="displayFilter">Anzeige</label>
+        <select id="displayFilter">
+          <option value="active">aktive</option>
+          <option value="all">alle</option>
+          <option value="closed">abgeschlossene</option>
+          <option value="critical">kritische</option>
+          <option value="due30">Abgabe ≤ 30 Tage</option>
+        </select>
+      </div>
+      <div><label for="statusFilter">Status</label><select id="statusFilter"></select></div>
+      <div><label for="riskFilter">Risiko</label><select id="riskFilter"></select></div>
+      <div><label for="typeFilter">Art</label><select id="typeFilter"></select></div>
+      <div>
+        <label for="sortSelect">Sortierung</label>
+        <select id="sortSelect">
+          <option value="due">Abgabedatum</option>
+          <option value="next">Nächster Termin</option>
+          <option value="risk">Risiko</option>
+          <option value="name">Name</option>
+          <option value="status">Status</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <nav class="tabs tab-row">
+    <div class="tab-left">
+      <button class="tab active" type="button" data-view="tableView">Übersicht</button>
+      <button class="tab" type="button" data-view="ganttView">Gantt</button>
+    </div>
+    <button id="columnsBtn" type="button">Auswahl Einträge</button>
+  </nav>
+
+  <section class="view active" id="tableView">
+    <div class="table-wrap">
+      <table class="overview-table">
+        <thead><tr id="overviewHeaderRow"></tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="view" id="ganttView">
+    <section class="card">
+      <div class="gantt-toolbar">
+        <div><label for="ganttStart">Gantt-Startdatum</label><input id="ganttStart" type="date" /></div>
+        <div><label for="ganttEnd">Gantt-Zieldatum</label><input id="ganttEnd" type="date" /></div>
+        <div><label>&nbsp;</label><button id="applyGanttRangeBtn" type="button">Gantt aktualisieren</button></div>
+      </div>
+    </section>
+    <div class="gantt-wrap"><div class="gantt" id="gantt"></div></div>
+  </section>
+</main>
+
+<dialog id="editDialog">
+  <form id="editForm">
+    <div class="dialog-head">
+      <h2 id="dialogTitle">Abschlussarbeit bearbeiten</h2>
+      <button type="button" id="closeDialogBtn">Schließen</button>
+    </div>
+
+    <div class="edit-tabs-row">
+      <div class="edit-tabs" id="editTabs"></div>
+      <button type="button" id="addAppointmentBtn">+ Termin</button>
+    </div>
+
+    <div class="dialog-body">
+      <div id="generalPane" class="edit-pane active">
+        <div class="form-grid">
+          <input type="hidden" id="editId" />
+          <div><label for="name">Name</label><input id="name" required /></div>
+          <div><label for="type">Art</label><select id="type"></select></div>
+          <div><label for="program">Studiengang</label><input id="program" placeholder="z. B. Maschinenbau" /></div>
+          <div><label for="company">Unternehmen / extern</label><input id="company" placeholder="intern oder Unternehmen" /></div>
+          <div class="span-4"><label for="topic">Thema</label><input id="topic" required /></div>
+          <div><label for="supervisor1">Betreuer 1</label><input id="supervisor1" /></div>
+          <div><label for="supervisor2">Betreuer 2</label><input id="supervisor2" /></div>
+          <div><label for="startDate">Startdatum</label><input id="startDate" type="date" /></div>
+          <div><label for="dueDate">Abgabedatum</label><input id="dueDate" type="date" /></div>
+          <div><label for="status">Status</label><select id="status"></select></div>
+          <div><label for="risk">Risiko</label><select id="risk"></select></div>
+          <div><label for="lastContact">Letzter Kontakt</label><input id="lastContact" type="date" /></div>
+          <div class="span-2"><label for="studentAction">Nächste Aktion Student*In</label><textarea id="studentAction"></textarea></div>
+          <div class="span-2"><label for="supervisorAction">Nächste Aktion Betreuer*In</label><textarea id="supervisorAction"></textarea></div>
+          <div><label for="expose">Exposé</label><select id="expose"></select></div>
+          <div><label for="outline">Gliederung</label><select id="outline"></select></div>
+          <div><label for="intermediate">Zwischenstand</label><select id="intermediate"></select></div>
+          <div><label for="colloquiumMode">Kolloquium</label><select id="colloquiumMode"><option value="none">kein</option><option value="date">Termin</option></select></div>
+          <div><label for="colloquiumDate">Kolloquiumstermin</label><input id="colloquiumDate" type="date" /></div>
+          <div><label for="evaluation">Bewertung</label><select id="evaluation"></select></div>
+          <div><label for="grade">Note</label><input id="grade" placeholder="z. B. 1,7" /></div>
+          <div><label for="tags">Tags</label><input id="tags" placeholder="z. B. FEM, Versuch, Industrie" /></div>
+          <div class="span-2"><label for="noteLink">Link Notiz</label><input id="noteLink" placeholder="obsidian://... oder Datei-/Weblink" /></div>
+          <div class="span-2"><label for="folderLink">Link Ordner</label><input id="folderLink" placeholder="file:///... oder Pfad" /></div>
+          <div class="span-4"><label for="remarks">Bemerkung / Protokollnotiz</label><textarea id="remarks"></textarea></div>
+        </div>
+      </div>
+      <div id="appointmentPane" class="edit-pane"></div>
+    </div>
+
+    <div class="dialog-foot">
+      <button type="button" id="deleteBtn" class="danger">Löschen</button>
+      <button type="button" id="duplicateBtn">Duplizieren</button>
+      <button type="submit" class="green">Speichern</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="columnsDialog">
+  <form id="columnsForm">
+    <div class="dialog-head">
+      <h2>Wähle aus, welche Spalten in der Übersicht angezeigt werden sollen.</h2>
+      <button type="button" id="closeColumnsBtn">Schließen</button>
+    </div>
+    <div class="dialog-body"><div class="columns-list" id="columnsList"></div></div>
+    <div class="dialog-foot">
+      <button type="button" id="showAllColumnsBtn">Alle anzeigen</button>
+      <button type="submit" class="green">Übernehmen</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="ganttTooltip" class="gantt-tooltip"></div>
+<div id="actionTooltip" class="gantt-tooltip action-tooltip"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
