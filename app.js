@@ -1,5 +1,5 @@
 /*
- * Abschlussarbeiten-Tool v40
+ * Abschlussarbeiten-Tool v41
  * Objektorientierter Aufbau:
  * - ThesisStore: Datenhaltung, Import/Export, Autosave
  * - MarkdownService: einfache Markdown-Interpretation
@@ -275,12 +275,14 @@ class ThesisStore {
     const dated = (thesis.appointments || [])
       .filter(a => a.date)
       .sort((a, b) => ((a.date || "") + " " + (a.time || "")).localeCompare((b.date || "") + " " + (b.time || "")));
-    const next = dated.find(a => new Date(a.date + "T00:00:00") >= today) || dated[0];
+    const next = dated.find(a => new Date(a.date + "T00:00:00") >= today);
     thesis.nextMeeting = next ? next.date : "";
+    thesis.nextMeetingAppointmentId = next ? next.id : "";
   }
 
   updateRiskAndActions(thesis) {
     if (!thesis) return;
+    this.syncNextMeeting(thesis);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -457,8 +459,8 @@ class ThesisApp {
   constructor() {
     this.$ = id => document.getElementById(id);
     this.store = new ThesisStore(
-      "abschlussarbeiten_tool_v40",
-      ["abschlussarbeiten_tool_v39","abschlussarbeiten_tool_v38","abschlussarbeiten_tool_v37","abschlussarbeiten_tool_v36","abschlussarbeiten_tool_v35","abschlussarbeiten_tool_v34","abschlussarbeiten_tool_v33","abschlussarbeiten_tool_v32","abschlussarbeiten_tool_v31","abschlussarbeiten_tool_v30","abschlussarbeiten_tool_v29","abschlussarbeiten_tool_v28","abschlussarbeiten_tool_v27","abschlussarbeiten_tool_v26","abschlussarbeiten_tool_v25","abschlussarbeiten_tool_v24","abschlussarbeiten_tool_v23","abschlussarbeiten_tool_v22","abschlussarbeiten_tool_v21","abschlussarbeiten_tool_v20","abschlussarbeiten_tool_v19","abschlussarbeiten_tool_v18","abschlussarbeiten_tool_v17","abschlussarbeiten_tool_v16","abschlussarbeiten_tool_v15","abschlussarbeiten_tool_v14","abschlussarbeiten_tool_v13","abschlussarbeiten_tool_v12","abschlussarbeiten_tool_v11","abschlussarbeiten_tool_v10","abschlussarbeiten_tool_v9","abschlussarbeiten_tool_v8","abschlussarbeiten_tool_v7","abschlussarbeiten_tool_v6","abschlussarbeiten_tool_v5","abschlussarbeiten_tool_v4","abschlussarbeiten_tool_v3","abschlussarbeiten_tool_v2","abschlussarbeiten_tool_v1"],
+      "abschlussarbeiten_tool_v41",
+      ["abschlussarbeiten_tool_v40","abschlussarbeiten_tool_v39","abschlussarbeiten_tool_v38","abschlussarbeiten_tool_v37","abschlussarbeiten_tool_v36","abschlussarbeiten_tool_v35","abschlussarbeiten_tool_v34","abschlussarbeiten_tool_v33","abschlussarbeiten_tool_v32","abschlussarbeiten_tool_v31","abschlussarbeiten_tool_v30","abschlussarbeiten_tool_v29","abschlussarbeiten_tool_v28","abschlussarbeiten_tool_v27","abschlussarbeiten_tool_v26","abschlussarbeiten_tool_v25","abschlussarbeiten_tool_v24","abschlussarbeiten_tool_v23","abschlussarbeiten_tool_v22","abschlussarbeiten_tool_v21","abschlussarbeiten_tool_v20","abschlussarbeiten_tool_v19","abschlussarbeiten_tool_v18","abschlussarbeiten_tool_v17","abschlussarbeiten_tool_v16","abschlussarbeiten_tool_v15","abschlussarbeiten_tool_v14","abschlussarbeiten_tool_v13","abschlussarbeiten_tool_v12","abschlussarbeiten_tool_v11","abschlussarbeiten_tool_v10","abschlussarbeiten_tool_v9","abschlussarbeiten_tool_v8","abschlussarbeiten_tool_v7","abschlussarbeiten_tool_v6","abschlussarbeiten_tool_v5","abschlussarbeiten_tool_v4","abschlussarbeiten_tool_v3","abschlussarbeiten_tool_v2","abschlussarbeiten_tool_v1"],
       "abschlussarbeiten_visible_columns_v1"
     );
     this.currentAppointmentId = null;
@@ -634,7 +636,14 @@ class ThesisApp {
         const cell = this.appendCell(tr, "");
         cell.innerHTML = `<span class="risk ${riskClass}">${MarkdownService.escapeHtml(t.risk)}</span>`;
       }
-      if (v("nextMeeting")) this.appendCell(tr, this.formatDate(t.nextMeeting));
+      if (v("nextMeeting")) {
+        const cell = this.appendCell(tr, this.formatDate(t.nextMeeting), "next-meeting-cell");
+        if (t.nextMeetingAppointmentId) {
+          cell.dataset.thesisId = t.id;
+          cell.dataset.appointmentId = t.nextMeetingAppointmentId;
+          cell.title = "Termin öffnen";
+        }
+      }
       if (v("colloquiumDate")) this.appendCell(tr, t.colloquiumMode === "date" ? this.formatDate(t.colloquiumDate) : "kein");
       if (v("lastContact")) this.appendCell(tr, this.formatDate(t.lastContact));
       if (v("studentAction")) {
@@ -1075,6 +1084,7 @@ class ThesisApp {
     const appt = { id: ThesisStore.makeId(), title: "Termin", date: date || today, time:"09:00", notes:"bislang keine Notiz", markdownInterpreted:false, supervisorTask:"bislang keine Aufgabe", studentTask:"bislang keine Aufgabe", supervisorTaskMarkdownInterpreted:false, studentTaskMarkdownInterpreted:false, supervisorDone:false, studentDone:false };
     thesis.appointments.push(appt);
     this.store.sortAndNumberAppointments(thesis);
+    this.store.updateRiskAndActions(thesis);
     this.scheduleAutosave();
     this.renderTable();
     this.renderEditTabs(thesis, appt.id);
@@ -1390,6 +1400,13 @@ class ThesisApp {
     this.$("tableBody").addEventListener("click", e => {
       const link = e.target.closest("a");
       if (link) return;
+
+      const nextMeetingCell = e.target.closest(".next-meeting-cell[data-thesis-id][data-appointment-id]");
+      if (nextMeetingCell) {
+        this.editThesis(nextMeetingCell.dataset.thesisId, nextMeetingCell.dataset.appointmentId);
+        return;
+      }
+
       const row = e.target.closest("tr[data-id]");
       if (row) this.editThesis(row.dataset.id);
     });

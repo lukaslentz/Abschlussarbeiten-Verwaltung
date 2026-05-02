@@ -347,3 +347,15 @@ input,select,textarea{
   padding:12px 14px;
   color:var(--text);
 }
+
+
+/* Version v41: anklickbarer nächster Termin */
+td.next-meeting-cell[data-appointment-id]{
+  cursor:pointer;
+  color:var(--ucbblue);
+  font-weight:700;
+}
+td.next-meeting-cell[data-appointment-id]:hover{
+  text-decoration:underline;
+  background:#eef3ff;
+}

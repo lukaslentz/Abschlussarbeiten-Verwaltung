@@ -216,3 +216,15 @@ Der Hinweis im Reiter „Daten“ wurde angepasst:
 ## Version v40
 
 Der Button „Help“ wurde in „Hilfe“ umbenannt.
+
+## Version v41
+
+- Der nächste Termin wird jetzt immer als nächster zukünftiger Termin aus der Terminliste abgeleitet.
+- Neue Termine werden sofort in die Übersicht übernommen.
+- In der Übersicht ist der Datumseintrag in der Spalte „Nächster Termin“ anklickbar.
+- Ein Klick auf dieses Datum öffnet direkt den zugehörigen Termin-Reiter.
+
+
+## Rollout 1
+
+Das integrierte Handbuch wurde aktualisiert und verwendet nun die Bezeichnung „Rollout 1“ statt einer technischen Versionsnummer.
